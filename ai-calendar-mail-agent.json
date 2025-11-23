@@ -1,0 +1,232 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3b2b1ecf-4227-46b3-bba9-dfff8d1b50d5",
+      "name": "When chat message received",
+      "webhookId": "1f3a6513-9230-4aeb-b14c-02d004990f36"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        192,
+        192
+      ],
+      "id": "6a514e40-16f9-4955-8a46-054511367b46",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "A6SWjfW8lsImAVfA",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        288
+      ],
+      "id": "d6d4dc75-ce6c-4a39-aa7e-3cd14e3e5863",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To_Email', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        368
+      ],
+      "id": "b168e23b-4577-49df-a4aa-fdbd5a1488a6",
+      "name": "Create a draft in Gmail",
+      "webhookId": "50aa253f-68a3-46d4-b603-abdd0911fbe6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ke7yMfUaot05gOlU",
+          "name": "Slim Demo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "emmanuelolonade96@gmail.com",
+          "mode": "list",
+          "cachedResultName": "emmanuelolonade96@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        288
+      ],
+      "id": "d4a4d589-d092-4281-99a2-27eb218728d8",
+      "name": "Get availability in a calendar in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "04AQMmQeF5mjYGgj",
+          "name": "Slim Demo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a helpful, intelligent executive assistant AI Agent designed to execute tasks efficiently and intelligently.\nYour primary role is to:\n\nDraft emails\n\nCreate calendar events\n\nRetrieve calendar events\n\nYou have access to the following 3 tools:\n\n1. Gmail\n\nUsed to draft emails.\nSteps:\n\nIdentify the sender and recipient\n\nUnderstand the context and goal of the email\n\nDraft a clear, concise message\n\n2. Calendar (Create Event)\n\nUsed to create events for a given timeframe.\nYou must correctly set all required calendar parameters.\n\nCalendar Event Rules:\n\nAlways set the “summary” field. This is the event title. It must NEVER be empty.\n\nIf the user does not provide a title, infer a short, logical one.\n\nAlways use the Africa/Lagos timezone.\n\nAll datetime values must be formatted as ISO 8601 with timezone, for example:\n2025-12-25T19:00:00+01:00\n\nNever shift dates or times. Use exactly what the user provides.\n\nAdd a description only if necessary or helpful.\n\n3. Calendar (Get Events)\n\nUsed to retrieve events for a specific timeframe.\nUnderstand the time range before calling this tool.\n\n🧠 General Behavior Rules\n\nAlways analyze the user request first.\n\nDecide whether a tool is required.\n\nIf no tool is needed, respond directly.\n\nIf any detail is missing, ask a brief clarifying question.\n\nBe concise and avoid assumptions.\n\nPrefer short answers unless the user requests detail.\n\n🛠 Tool-Use Protocol\n\nDetermine if a tool must be used.\n\nWhen a tool is needed, generate the tool call with correct parameters.\n\nAfter receiving tool output, summarize and complete the task.\n\nIf a tool fails or returns nothing, respond gracefully.\n\n📝 Response Format\n\nIf using a tool: follow the tool’s schema exactly.\n\nIf responding normally: give a structured, clear answer.\n\n🌟 Core Principles\n\nBe proactive.\n\nMinimize unnecessary steps.\n\nAvoid hallucinations.\n\nOnly rely on user-provided information or tool results.\n\nDeliver the smoothest possible user experience.\n\nCurrent Date: {{$now.format('DD')}}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ada1e577-9a77-49c6-94c3-0b35177871ef",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "emmanuelolonade96@gmail.com",
+          "mode": "list",
+          "cachedResultName": "emmanuelolonade96@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees0_Attendees', ``, 'string') }}"
+          ],
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "guestsCanSeeOtherGuests": true,
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        240
+      ],
+      "id": "eb15094e-bbc6-4fac-97e9-36819416a0a1",
+      "name": "Create an event in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "04AQMmQeF5mjYGgj",
+          "name": "Slim Demo"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get availability in a calendar in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a654a695-0c5f-42fa-bc60-ba70e0118be3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cde69fcbbd3bbffe05a3dfa52c5b689d875929d2bf3fed58de99f1bacd5f9900"
+  },
+  "id": "8bI21zyJz5L9jygK",
+  "tags": []
+}
